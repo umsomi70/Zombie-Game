@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4097141314170210990
+--- !u!1 &2082270440440483868
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5453603106473053373}
-  - component: {fileID: 7220807273743562727}
-  - component: {fileID: 914152901014348532}
-  - component: {fileID: 1769685093767452238}
-  - component: {fileID: 272194295531739147}
+  - component: {fileID: 6033499740016056037}
+  - component: {fileID: 5001818359948439373}
+  - component: {fileID: 2743296536687163699}
+  - component: {fileID: 5406859157940412778}
+  - component: {fileID: 6058317617828583894}
   m_Layer: 9
-  m_Name: GasCan
+  m_Name: SupplyCrate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5453603106473053373
+--- !u!4 &6033499740016056037
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4097141314170210990}
+  m_GameObject: {fileID: 2082270440440483868}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.65, y: -14.11, z: 0}
-  m_LocalScale: {x: 1.2593179, y: 1.3795943, z: 0.5117}
+  m_LocalPosition: {x: 16.22, y: -14.48, z: 0}
+  m_LocalScale: {x: 0.35468805, y: 0.38806185, z: 0.5647}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &7220807273743562727
+--- !u!212 &5001818359948439373
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4097141314170210990}
+  m_GameObject: {fileID: 2082270440440483868}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -84,23 +84,39 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 3342810843763551034, guid: 8dc780b4dc7c3ff43aaa87544cf277c4, type: 3}
-  m_Color: {r: 0.38726282, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: -3485132406647677945, guid: b6d6b052e3d95514191f885257c4e2ba, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.59, y: 0.54}
+  m_Size: {x: 3.78, y: 3.62}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &914152901014348532
+--- !u!114 &2743296536687163699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082270440440483868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e344c50bcbff2d41979440979fc868b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SupplyCrate
+  health: 1
+  destroyVFX: {fileID: 5537348504840054865, guid: 438d07ce0a8cdce4e99ea67d2546e3c6, type: 3}
+  explosionSound: {fileID: 8300000, guid: 18a877ddefb0c2641af7d92ed760fec0, type: 3}
+  possibleDrops: []
+--- !u!61 &5406859157940412778
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4097141314170210990}
+  m_GameObject: {fileID: 2082270440440483868}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -132,22 +148,22 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.7, y: 1.24}
-    newSize: {x: 0.59, y: 0.54}
+    oldSize: {x: 3.78, y: 3.62}
+    newSize: {x: 3.78, y: 3.62}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7, y: 1.24}
+  m_Size: {x: 3.78, y: 3.62}
   m_EdgeRadius: 0
---- !u!50 &1769685093767452238
+--- !u!50 &6058317617828583894
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4097141314170210990}
+  m_GameObject: {fileID: 2082270440440483868}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -167,26 +183,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &272194295531739147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4097141314170210990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63fd1e421eafa4f4686fbfe9ce498776, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExplosiveGasCan
-  health: 1
-  destroyVFX: {fileID: 0}
-  radius: 3
-  damage: 40
-  force: 12
-  terrainRadius: 1.5
-  chainDelay: 0.08
-  affectedLayers:
-    serializedVersion: 2
-    m_Bits: 896
-  explosionSound: {fileID: 0}
