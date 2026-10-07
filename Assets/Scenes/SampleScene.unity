@@ -225441,6 +225441,10 @@ PrefabInstance:
       propertyPath: destroyVFX
       value: 
       objectReference: {fileID: 3445167172898437752, guid: 6c767393628500b43a204838a5bba032, type: 3}
+    - target: {fileID: 272194295531739147, guid: ba5f6f185eaa3a04db6b04ec0ccc64ac, type: 3}
+      propertyPath: explosionSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 1eb047a601e521d4bb349bd1e584cc27, type: 3}
     - target: {fileID: 4097141314170210990, guid: ba5f6f185eaa3a04db6b04ec0ccc64ac, type: 3}
       propertyPath: m_Name
       value: GasCan

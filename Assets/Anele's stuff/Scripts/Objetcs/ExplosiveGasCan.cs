@@ -10,6 +10,7 @@ public class ExplosiveGasCan : DestructibleObject
     [SerializeField] float terrainRadius = 1.5f;
     [SerializeField] float chainDelay = 0.08f;
     [SerializeField] LayerMask affectedLayers;
+    [SerializeField] AudioClip explosionSound;   // add with the other fields
 
     protected override void Die()
     {
@@ -24,6 +25,8 @@ public class ExplosiveGasCan : DestructibleObject
         if (destroyVFX) Instantiate(destroyVFX, transform.position, Quaternion.identity);
         Explosion.Create(transform.position, radius, damage, force, affectedLayers, terrainRadius);
         Destroy(gameObject);
+
+        if (explosionSound) AudioSource.PlayClipAtPoint(explosionSound, transform.position);
     }
 
     void OnDrawGizmosSelected()
