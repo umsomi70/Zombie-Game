@@ -28,18 +28,29 @@ public class PlayerController2D : MonoBehaviour
     public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
 
+    [Header("Ladder")]
+    public float climbSpeed = 5f;
+
     [Header("Visuals")]
     public Transform playerGFX;
 
     private Rigidbody2D rb;
 
     private float moveInput;
+    private float climbInput;
+
     private int jumpsRemaining;
 
     private bool touchingLeftWall;
     private bool touchingRightWall;
 
     private bool isWallGrabbing;
+
+    private bool isOnLadder;
+    private Ladder2D currentLadder;
+
+    // Remember the player's gravity before entering the ladder
+    private float normalGravityScale;
 
     public bool IsWallGrabbing => isWallGrabbing;
 
@@ -50,16 +61,36 @@ public class PlayerController2D : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         jumpsRemaining = maxJumps;
+
+        // Store the original gravity setting
+        normalGravityScale = rb.gravityScale;
     }
 
     private void Update()
     {
         GetMovementInput();
+        GetClimbInput();
 
         CheckWalls();
 
-        HandleWallGrab();
+        // If we are climbing and press left/right,
+        // exit the ladder.
+        if (isOnLadder && Mathf.Abs(moveInput) > 0)
+        {
+            ExitLadder();
+        }
 
+        // Handle ladder
+        if (isOnLadder)
+        {
+            HandleLadder();
+        }
+        else
+        {
+            HandleWallGrab();
+        }
+
+        // Jump
         if (Keyboard.current != null &&
             Keyboard.current.spaceKey.wasPressedThisFrame)
         {
@@ -71,6 +102,13 @@ public class PlayerController2D : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Ladder movement replaces normal movement.
+        if (isOnLadder)
+        {
+            HandleLadderMovement();
+            return;
+        }
+
         HandleMovement();
         HandleWallSlide();
 
@@ -80,6 +118,10 @@ public class PlayerController2D : MonoBehaviour
             jumpsRemaining = maxJumps;
         }
     }
+
+    // =========================================================
+    // INPUT
+    // =========================================================
 
     private void GetMovementInput()
     {
@@ -101,6 +143,30 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    private void GetClimbInput()
+    {
+        climbInput = 0f;
+
+        if (Keyboard.current == null)
+            return;
+
+        if (Keyboard.current.wKey.isPressed ||
+            Keyboard.current.upArrowKey.isPressed)
+        {
+            climbInput = 1f;
+        }
+
+        if (Keyboard.current.sKey.isPressed ||
+            Keyboard.current.downArrowKey.isPressed)
+        {
+            climbInput = -1f;
+        }
+    }
+
+    // =========================================================
+    // NORMAL MOVEMENT
+    // =========================================================
+
     private void HandleMovement()
     {
         // Don't allow normal horizontal movement
@@ -113,6 +179,10 @@ public class PlayerController2D : MonoBehaviour
             rb.linearVelocity.y
         );
     }
+
+    // =========================================================
+    // WALL CHECKING
+    // =========================================================
 
     private void CheckWalls()
     {
@@ -128,6 +198,10 @@ public class PlayerController2D : MonoBehaviour
             wallLayer
         );
     }
+
+    // =========================================================
+    // WALL GRAB
+    // =========================================================
 
     private void HandleWallGrab()
     {
@@ -170,6 +244,10 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    // =========================================================
+    // WALL SLIDE
+    // =========================================================
+
     private void HandleWallSlide()
     {
         if (IsGrounded())
@@ -191,6 +269,10 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    // =========================================================
+    // JUMP
+    // =========================================================
+
     private void Jump()
     {
         if (jumpsRemaining <= 0)
@@ -203,6 +285,10 @@ public class PlayerController2D : MonoBehaviour
 
         jumpsRemaining--;
     }
+
+    // =========================================================
+    // WALL JUMP
+    // =========================================================
 
     private void WallJump()
     {
@@ -228,6 +314,125 @@ public class PlayerController2D : MonoBehaviour
         WallGrabSide = 0;
     }
 
+    // =========================================================
+    // LADDER
+    // =========================================================
+
+    private void HandleLadder()
+    {
+        if (!isOnLadder)
+            return;
+
+        // While on the ladder, stop wall grabbing.
+        isWallGrabbing = false;
+        WallGrabSide = 0;
+
+        // Disable gravity while climbing.
+        rb.gravityScale = 0f;
+    }
+
+    private void HandleLadderMovement()
+    {
+        if (!isOnLadder)
+            return;
+
+        // Move vertically on the ladder.
+        rb.linearVelocity = new Vector2(
+            0f,
+            climbInput * climbSpeed
+        );
+
+        // Keep the player centered on the ladder.
+        if (currentLadder != null)
+        {
+            Vector2 position = rb.position;
+
+            position.x = currentLadder.transform.position.x;
+
+            rb.position = position;
+        }
+    }
+
+    // =========================================================
+    // ENTER LADDER
+    // =========================================================
+
+    private void EnterLadder(Ladder2D ladder)
+    {
+        currentLadder = ladder;
+        isOnLadder = true;
+
+        // Store gravity before changing it
+        normalGravityScale = rb.gravityScale;
+
+        // Disable gravity
+        rb.gravityScale = 0f;
+
+        // Stop current movement
+        rb.linearVelocity = Vector2.zero;
+
+        // Stop wall grabbing
+        isWallGrabbing = false;
+        WallGrabSide = 0;
+    }
+
+    // =========================================================
+    // EXIT LADDER
+    // =========================================================
+
+    private void ExitLadder()
+    {
+        if (!isOnLadder)
+            return;
+
+        isOnLadder = false;
+        currentLadder = null;
+
+        // Restore the original gravity
+        rb.gravityScale = normalGravityScale;
+
+        // Allow normal movement immediately
+        rb.linearVelocity = new Vector2(
+            moveInput * moveSpeed,
+            rb.linearVelocity.y
+        );
+    }
+
+    // =========================================================
+    // LADDER TRIGGER
+    // =========================================================
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Ladder2D ladder = other.GetComponent<Ladder2D>();
+
+        if (ladder == null)
+            return;
+
+        // Don't enter another ladder while already climbing
+        if (isOnLadder)
+            return;
+
+        EnterLadder(ladder);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        Ladder2D ladder = other.GetComponent<Ladder2D>();
+
+        if (ladder == null)
+            return;
+
+        if (ladder != currentLadder)
+            return;
+
+        ExitLadder();
+    }
+
+    // =========================================================
+    // PLAYER FLIP
+    // =========================================================
+
     private void FlipPlayerGFX()
     {
         if (playerGFX == null)
@@ -251,6 +456,10 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    // =========================================================
+    // GROUND CHECK
+    // =========================================================
+
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(
@@ -259,6 +468,10 @@ public class PlayerController2D : MonoBehaviour
             groundLayer
         );
     }
+
+    // =========================================================
+    // GIZMOS
+    // =========================================================
 
     private void OnDrawGizmosSelected()
     {
